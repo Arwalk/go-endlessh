@@ -1,0 +1,7 @@
+/.idea/.gitignore
+/config.ini
+/.idea/go-endlessh.iml
+/go_endlessh.log
+/.idea/modules.xml
+/stats.json
+/.idea/vcs.xml
