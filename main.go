@@ -12,14 +12,6 @@ import (
 	"time"
 )
 
-func stringInSlice(a string, list []string) bool {
-	for _, b := range list {
-		if b == a {
-			return true
-		}
-	}
-	return false
-}
 
 type Configuration struct {
 	statsFile  *os.File
@@ -147,9 +139,15 @@ func getClientCount() int32 {
 	return atomic.LoadInt32(&activeClients)
 }
 
-func main() {
+type Stats struct {
+	LongestTime time.Duration
+	CumulatedTime time.Duration
+	NumConnected int64
+}
 
-	log.Info("Starting go-endlessh service")
+var stats Stats
+
+func main() {
 
 	path, err := os.Getwd()
 	checkError(err)
@@ -159,6 +157,9 @@ func main() {
 
 	conf, err := checkConfigFile(configFile)
 	checkError(err)
+
+	log.SetOutput(conf.logFile)
+	log.Info("Starting go-endlessh service")
 
 	tcpAddr, err := net.ResolveTCPAddr(conf.bindFamily, fmt.Sprintf(":%s", conf.port))
 	checkError(err)
